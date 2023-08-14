@@ -1,25 +1,30 @@
-import collections
 class Solution:
-    def timeTaken(self, arrivals: list[int], states: list[int]) -> list[int]:
-        n = len(arrivals)
-        answer = [0] * n
-
-        time, direction = 0, 1
-        queues = [collections.deque(), collections.deque()]
-
-        def exhaust_until(end_time: int=2*10**5) -> None:
-            nonlocal time, direction
-            while end_time > time and any(queues):
-                if not queues[direction]:
-                    direction ^= 1
-                answer[queues[direction].popleft()] = time
+    def timeTaken(self, arrival: List[int], state: List[int]) -> List[int]:
+        ans = [None for _ in range(len(arrival))]
+        prev = None  # previous action, either 0 (enter), 1 (exit) or None
+        enterq = deque()
+        exitq = deque()
+        time = arrival[0]
+        i = 0
+        while i < len(arrival) or enterq or exitq:
+            while i < len(arrival) and arrival[i] <= time:
+                if state[i] == 0:
+                    enterq.append(i)
+                else:
+                    exitq.append(i)
+                i += 1
+            if enterq and (prev == 0 or not exitq):
+                person = enterq.popleft()
+                ans[person] = time
+                prev = 0
                 time += 1
-
-        for index, (arrival, state) in enumerate(zip(arrivals, states)):
-            exhaust_until(arrival)
-            if arrival > time:
-                time, direction = arrival, 1
-            queues[state].append(index)
-
-        exhaust_until()
-        return answer
+            elif exitq:
+                person = exitq.popleft()
+                ans[person] = time
+                prev = 1
+                time += 1
+            else:
+                if i < len(arrival):
+                    time = arrival[i]
+                prev = None
+        return ans
