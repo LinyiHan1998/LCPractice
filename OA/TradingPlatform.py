@@ -37,3 +37,4 @@ if __name__ == '__main__':
     s.Sell('b',10)
     s.Change('b',-2)
     print(s.Query())
+
