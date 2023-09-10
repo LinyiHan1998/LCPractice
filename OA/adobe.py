@@ -21,3 +21,13 @@ def solution(a, b):
     
 print(solution([1, 0, 2], [1, 3, 0, 0]))
 print(solution([0, 0, 0], [1, 1]))
+
+class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        if nums is None: return
+        res,s =nums[0],nums[0]
+        for i in nums[1:]:
+            s += i
+            s = max(s,i)
+            res = max(s,res)
+        return res
