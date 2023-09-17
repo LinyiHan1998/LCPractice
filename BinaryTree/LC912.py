@@ -1,3 +1,4 @@
+#merge sort
 class Solution:
     def sortArray(self, nums: List[int]) -> List[int]:
         return self.sort(nums,0,len(nums)-1)
@@ -26,3 +27,33 @@ class Solution:
             res.extend(right[r:])
         
         return res
+# quick sort
+class Solution:
+    def sortArray(self, nums: List[int]) -> List[int]:
+        self.sort(nums,0,len(nums)-1)
+        return nums
+    
+    def partition(self,nums,lo,hi):
+        pivot = nums[lo]
+        l,r = lo + 1,hi
+        while  l <= r:
+            while l < hi and nums[l] <= pivot:
+                l += 1
+            while r > lo and nums[r] > pivot:
+                r -= 1
+            if l >= r:
+                break
+            nums[l],nums[r] = nums[r],nums[l]
+        nums[lo],nums[r] = nums[r],nums[lo]
+        return r
+        
+    def sort(self,nums,lo,hi):
+        if lo >= hi:
+            return
+        idx = self.partition(nums,lo,hi)
+        self.sort(nums,lo,idx-1)
+        self.sort(nums,idx+1,hi)
+        return
+    def shuffle(self,nums):
+        pass
+        
