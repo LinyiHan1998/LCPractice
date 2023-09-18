@@ -1,3 +1,11 @@
+
+
+
+
+
+
+
+#都没看到题目要哪个函数
 class Bank:
     def __init__(self) -> None:
         self.account = {} # id: deposit
@@ -18,8 +26,8 @@ class Bank:
         self.account[account_id] += int(amount)
         self.transactions[account_id] += int(amount)
         return str(self.account[account_id])
-
-    def pay(self, timestamp, account_id, amount):
+##  level4 很难，为啥要自己想，自己想的话提前准备是为啥呢
+    def pay(self, timestamp, account_id, amount):#谁知道啊，不是你现在做的这个题啊。你现在做的不是要找到动账最多的吗，不就是top activity吗。你现在看的不还是level1的需求吗
         if account_id not in self.account:
             return ""
         bal = self.account[account_id]
@@ -29,7 +37,7 @@ class Bank:
         self.transactions[account_id] += int(amount)
         return str(self.account[account_id])
 
-    def top_activity(self, timestamp, n):
+    def top_activity(self, timestamp, n): #不就是这个函数吗，我第一次就给你看了这里啊
         n = int(n)
         sz = len(self.transactions)
         hm = sorted(self.transactions.items(), key=lambda kv: -1 * kv[1])
@@ -38,6 +46,11 @@ class Bank:
             res.append(str(hm[i][0]) + '(' + str(hm[i][1]) + ')' + ' ')
 
         return ', '.join(res)
+    #solution q[1]写成了1【1
+    def schedule_payment(self,timestamp,accountId,amount,delay):
+        pass
+    #感觉差不多
+
 
     def transfer(self, timestamp, source_account_id, target_account_id, amount):
         if source_account_id == target_account_id:
@@ -60,7 +73,30 @@ class Bank:
         }
 
         return cur_transfer_id
+    #每个函数都要加对时间戳的处理
+    #时间到了要给到点的扣钱
+    #那个schedule的到了13也要扣钱了，错在了没扣schedule的余额，而且要先扣schedule的再加deposit的
+    
+    def timeup(self,timestamp):
+        for transaction in self.transfer:#按你的改呀，我不知道你写的是啥，你每次画那么快看不到，
+            #拿timestamp和你的字典里的expire比
+            #判断等于把，不用小于，等于的时候执行扣钱
+            #那也是timestamp > expire吧
+            #每个函数执行的时候都要走一下timeup
+            #self.
 
+            #要是一次略过了很多比交易怎么办
+            #要不要根据时间排个序，先expire的先扣钱
+            #扣完钱的把expire改成inf
+            #sorted dict lambda拿个搞搞不可以 lambda x : x[1]["exipre"]么
+            #都没有hidden test case岂不是可以写死
+            #cancel的漏了
+
+            #怎么感觉每次都加了呀
+            #是不是没判断已经加过了不加
+            if timestamp > transaction[3] and transaction[3] != -1 :
+                self.account[transaction[0]] += int(transaction[2])
+                transaction[3] = -1
     def accept_transfer(self, timestamp, account_id, transfer_id):
         if transfer_id not in self.transfer_event:
             return "false"
@@ -76,25 +112,53 @@ class Bank:
         self.transactions[self.transfer_event[transfer_id]["target"]] += self.transfer_event[transfer_id]["amount"]
 
         return "true"
+    def merge_account(self,timestamp,acc1,acc2):
+        if acc1 == acc2:
+            pass
+        self.account[acc1] += self.account[acc2]
+        # self.payment[cur_transfer_id] = {
+        #     "timestamp": timestamp,
+        #     "source": source_account_id,
+        #     "target": target_account_id,
+        #     "amount": amount,
+        #     "flag": 0
+        # }
+
+        ##就把source也变成acc1试试，不行再说，能过几个是几个
+        for transaction in self.payment :
+            if target == acc2:
+                target = acc1
+    def get_balance(self,timestamp,account_id,time_at):
+        cur_balance = self.account(account_id)
+
+        time_dict = {} #schedule且没被cancel，且source或者target是自己的时间戳：schedule的金额，是source就是负数，是target就是正数
+        #先把merge的跑了吧，能过几个testcase也加分
+        #solution写了吗
+        #看看别的error
+        #没删self.account 里被合并的账号
+        for pay in self.payment_event:
+            time_dict[pay["expire"]] = pay["amount"]
+        sorted_dict = dict(sorted(time_dict.items()))
+
 
 
 def solution(queries):
-    bank = Bank()
+    bs = Bank()
     res = []
-    for query in queries:
-        if query[0] == 'CREATE_ACCOUNT':
-            res.append(bank.create_account(query[1], query[2]))
-        elif query[0] == 'DEPOSIT':
-            res.append(bank.deposit(query[1], query[2], query[3]))
-        elif query[0] == 'PAY':
-            res.append(bank.pay(query[1], query[2], query[3]))
+    for q in queries:
+        if q[0] == 'CREATE_ACCOUNT':
+            res.append(bs.create_account(q[1], q[2]))
+        elif q[0] == 'DEPOSIT':
+            res.append(bs.deposit(q[1], q[2], q[3]))
+        elif q[0] == 'PAY':
+            res.append(bs.pay(q[1], q[2], q[3]))
 
-        elif query[0] == 'TOP_ACTIVITY':
-            res.append(bank.top_activity(query[1], query[2]))
-        elif query[0] == 'TRANSFER':
-            res.append(bank.transfer(query[1], query[2], query[3], query[4]))
-        elif query[0] == 'ACCEPT_TRANSFER':
-            res.append(bank.accept_transfer(query[1], query[2], query[3]))
+        elif q[0] == 'TOP_ACTIVITY':
+            res.append(bs.top_activity(q[1], q[2]))
+        elif q[0] == 'TRANSFER':
+            res.append(bs.transfer(q[1], q[2], q[3], q[4]))
+        elif q[0] == 'ACCEPT_TRANSFER':
+            res.append(bs.accept_transfer(q[1], q[2], q[3]))
     return res
 
 
