@@ -1,6 +1,11 @@
 def maxGenePhone(arr1,memCon):
     memCon = sorted(memCon,key = lambda x:(x[0],x[1]))
-    print(memCon)
+    tree = []
+    for i in range(len(memCon)):
+        
+        tree.append(memCon[0])
+        tree.append(memCon[1])
+
 
 if __name__=="__main__":
     memCon = [

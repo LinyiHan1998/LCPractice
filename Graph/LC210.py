@@ -30,4 +30,31 @@ class Solution:
             return []
         return res[::-1]
 
+from collections import deque
+class Solution:
+    def findOrderBFS(self,numCourses,prerequisites):
+        graph = [[]*numCourses for _ in range(numCourses)]
+        indegree = [0]*numCourses
+
+        for edge in prerequisites:
+            graph[edge[1]].append(edge[0])
+            indegree[edge[0]] += 1
+        queue = deque()
+        count = 0
+        res = [0] * numCourses
+
+        for i in range(numCourses):
+            if indegree[i] == 0:
+                queue.append(i)
         
+        while queue:
+            root = queue.popleft()
+            count += 1
+            res[count] = root
+            for node in graph[root]:
+                indegree[node] -= 1
+                if indegree[node] == 0:
+                    queue.append(node)
+        if count == numCourses:
+            return res
+        return []

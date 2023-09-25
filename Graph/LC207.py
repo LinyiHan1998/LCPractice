@@ -27,3 +27,29 @@ class Solution:
         for i in range(numCourses):
             traverse(graph,i)
         return True if has_cycle == 0 else False
+    
+
+from collections import deque
+class Solution:
+    def canFinishBFS(self,numCourses,prerequisites):
+        graph = [[]*numCourses for _ in range(numCourses)]
+        indegree = [0]*numCourses
+
+        for edge in prerequisites:
+            graph[edge[1]].append(edge[0])
+            indegree[edge[0]] += 1
+        queue = deque()
+        count = 0
+
+        for i in range(numCourses):
+            if indegree[i] == 0:
+                queue.append(i)
+        
+        while queue:
+            root = queue.popleft()
+            count += 1
+            for edge in graph[root]:
+                indegree[edge] -= 1
+                if indegree[edge] == 0:
+                    queue.append(edge)
+        return count == numCourses
