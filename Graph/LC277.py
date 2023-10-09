@@ -3,7 +3,10 @@
 # def knows(a: int, b: int) -> bool:
 
 class Solution:
+    
     def findCelebrity(self, n: int) -> int:
+        def knows(a,b):
+            pass
         q = []
         for i in range(n):
             q.append(i)
