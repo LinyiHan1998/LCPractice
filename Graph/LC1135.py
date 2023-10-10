@@ -25,4 +25,56 @@ class Solution:
             uf.union(x,y)
             res += conn[2]
         return res if uf.count == 1 else -1
+
+
+
+import heapq
+class Solution:
+    def minimumCost(self, n: int, connections: List[List[int]]) -> int:
+        class Prim:
+            def __init__(self,graph):
+                self.graph = graph
+                self.pq = []
+                self.inMST = [False]*len(graph)
+                self.weightSum = 0
+
+                self.inMST[0] = True
+                self.cut(0)
+
+                while self.pq:
+                    _,edge = heapq.heappop(self.pq)
+                    to = edge[1]
+                    weight = edge[2]
+                    if self.inMST[to]:
+                        continue
+                    self.weightSum += weight
+                    self.inMST[to] = True
+                    self.cut(to)
+            def cut(self,s):
+                for edge in self.graph[s]:
+                    to = edge[1]
+                    if self.inMST[to]:
+                        continue
+                    heapq.heappush(self.pq,(edge[2],edge))
+            def allconnected(self):
+                for i in range(len(self.inMST)):
+                    if self.inMST[i] == False:
+                        return False
+                return True
+        def BuildGraph(n,connections):
+            graph = [[] for _ in range(n)]
+            for conn in connections:
+                u = conn[0]-1
+                v = conn[1]-1
+                weight = conn[2]
+                graph[u].append([u,v,weight])
+                graph[v].append([v,u,weight])
+            return graph
+        graph = BuildGraph(n,connections)
+        prim = Prim(graph)
+
+        if prim.allconnected():
+            return prim.weightSum
+        return -1
+
         
