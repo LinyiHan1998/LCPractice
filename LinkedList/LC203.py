@@ -12,6 +12,6 @@ class Solution:
                 p.next = p.next.next
             else:
                 p = p.next
-        return dummy.nexta
+        return dummy.next
 
         
