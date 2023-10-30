@@ -12,6 +12,17 @@ class Solution:
         # dirction = [[0,-1],[0,1],[0,-1],[0,1]]
         # while que:
         #     i,j = que[0],que[1]
+        def dfs(r,c):
+            if grid[r][c] == '0' or visited[r][c] == '1':
+                return
+            visited[r][c] = '1'
+            for offset_r,offset_c in offset:
+                if (r+offset_r<0 or
+                r+offset_r>=m or
+                c+offset_c <0 or
+                c+offset_c>=n):
+                    continue
+                dfs(r+offset_r,c+offset_c)
         def bfs(r,c):
             que.append([r,c])
             while que:
